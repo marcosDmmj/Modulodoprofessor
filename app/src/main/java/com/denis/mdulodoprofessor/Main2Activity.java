@@ -3,15 +3,6 @@ package com.denis.mdulodoprofessor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-//public class Main2Activity extends AppCompatActivity {
-
-    //@Override
-   // protected void onCreate(Bundle savedInstanceState) {
-   //     super.onCreate(savedInstanceState);
-  //      setContentView(R.layout.activity_main2);
- //   }
-//}
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.extensions.android.http.AndroidHttp;
