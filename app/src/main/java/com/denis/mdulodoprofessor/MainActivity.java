@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity
                 Intent intent = new Intent(MainActivity.this,Main2Activity.class);
 
                 startActivity(intent);
+
+                // TODO Agendar horários para ele
             }
         });
 
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            // TODO Ele pode configurar a conta google logada
             return true;
         }
 
@@ -90,12 +93,10 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_slideshow) {
 
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_disponivel) {
+            // TODO Acessar URL correspondente e indicar que o professor está na sala e disponível!
+        } else if (id == R.id.nav_indisponivel) {
+            // TODO Acessar URL correspondente e indicar que o professor não está na sala ou está indisponível!
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

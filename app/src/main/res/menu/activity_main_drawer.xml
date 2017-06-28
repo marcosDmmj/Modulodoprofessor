@@ -6,28 +6,27 @@
             android:id="@+id/nav_camera"
             android:icon="@drawable/ic_menu_camera"
             android:title="Import" />
+        <!-- TODO Outro nome!-->
         <item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/ic_menu_gallery"
             android:title="Gallery" />
+        <!-- TODO Outro nome!-->
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+        <!-- TODO Outro nome!-->
     </group>
 
     <item android:title="Status">
         <menu>
             <item
-                android:id="@+id/nav_share"
+                android:id="@+id/nav_disponivel"
                 android:icon="@drawable/ic_done_black_24dp"
                 android:title="Disponível" />
             <item
-                android:id="@+id/nav_send"
+                android:id="@+id/nav_indisponivel"
                 android:icon="@drawable/ic_clear_black_24dp"
                 android:title="Indisponível" />
         </menu>
