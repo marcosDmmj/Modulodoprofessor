@@ -1,9 +1,9 @@
-package com.denis.mdulodoprofessor;
+package com.denis.mdulodoprofessor.Telas;
 
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.denis.mdulodoprofessor.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -20,7 +20,6 @@ import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.client.util.DateTime;
 
 import com.google.api.services.calendar.model.*;
-import com.google.api.services.calendar.model.Calendar;
 import com.roomorama.caldroid.CaldroidFragment;
 
 import android.Manifest;

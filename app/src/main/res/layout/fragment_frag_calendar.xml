@@ -1,0 +1,13 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.denis.mdulodoprofessor.Telas.Fragment.Frag_calendar">
+
+    <FrameLayout
+        android:id="@+id/cal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/nav_header_height"/>
+
+</FrameLayout>

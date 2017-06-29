@@ -1,4 +1,4 @@
-package com.denis.mdulodoprofessor;
+package com.denis.mdulodoprofessor.Telas;
 
 import android.Manifest;
 import android.accounts.AccountManager;
@@ -7,6 +7,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -14,6 +16,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -24,9 +28,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.TextView;
+import android.widget.Toast;
 
+import com.denis.mdulodoprofessor.R;
+import com.denis.mdulodoprofessor.Telas.Fragment.EventFragment;
+import com.denis.mdulodoprofessor.Telas.Fragment.Frag_calendar;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -41,10 +47,12 @@ import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
+import com.roomorama.caldroid.CaldroidFragment;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
@@ -54,6 +62,10 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, EasyPermissions.PermissionCallbacks {
     GoogleAccountCredential mCredential;
     ProgressDialog mProgress;
+    android.support.v4.app.FragmentTransaction fragmentTransaction;
+    CaldroidFragment caldroidFragment;
+
+    FloatingActionButton fab;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
@@ -70,17 +82,32 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                   //      .setAction("Action", null).show();
-                Intent intent = new Intent(MainActivity.this,Main2Activity.class);
+                //Intent intent = new Intent(MainActivity.this,Main2Activity.class);
 
-                startActivity(intent);
-
+              //  startActivity(intent);
                 // TODO Agendar horários para ele
+                Snackbar.make(fab, "Ué...", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                caldroidFragment = new CaldroidFragment();
+                Bundle args = new Bundle();
+                java.util.Calendar cal = java.util.Calendar.getInstance();
+                args.putInt(CaldroidFragment.MONTH, cal.get(java.util.Calendar.MONTH) + 1);
+                args.putInt(CaldroidFragment.YEAR, cal.get(java.util.Calendar.YEAR));
+                //args.putInt(CaldroidFragment.THEME_RESOURCE, com.caldroid.R.style.CaldroidDefaultDark);
+                ColorDrawable green = new ColorDrawable(Color.GREEN);
+                caldroidFragment.setBackgroundDrawableForDate(green, new Date());
+                caldroidFragment.setTextColorForDate(R.color.colorPrimary,new Date());
+                caldroidFragment.setArguments(args);
+
+                fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.cal, caldroidFragment);
+                fragmentTransaction.commit();
             }
         });
 
@@ -90,6 +117,7 @@ public class MainActivity extends AppCompatActivity
         //noinspection deprecation
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+        displayView(R.id.nav_home);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -124,39 +152,101 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
-    @SuppressWarnings("StatementWithEmptyBody")
-    // as you specify a parent activity in AndroidManifest.xml.
+        // as you specify a parent activity in AndroidManifest.xml.
             int id = item.getItemId();
 
-    //noinspection SimplifiableIfStatement
+        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-        getResultsFromApi();
-        // TODO Ele pode configurar a conta google logada
-        return true;
-    }
+            //getResultsFromApi();
+            Snackbar.make(getCurrentFocus(), "Ué...", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            // TODO Ele pode configurar a conta google logada
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
 }
+    public void displayView(int viewId) {
+        Fragment fragment = null;
+        String title = getString(R.string.app_name);
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        switch (viewId) {
+            case R.id.nav_home:
+                //fragment = new EventFragment();
+                title  = "Home";
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+                break;
+            case R.id.nav_calendario:
+                //fragment = new Frag_calendar();
+                Toast.makeText(this,"Veio aqui?", Toast.LENGTH_LONG).show();
+                title = "Events";
+                caldroidFragment = new CaldroidFragment();
+                Bundle args = new Bundle();
+                java.util.Calendar cal = java.util.Calendar.getInstance();
+                args.putInt(CaldroidFragment.MONTH, cal.get(java.util.Calendar.MONTH) + 1);
+                args.putInt(CaldroidFragment.YEAR, cal.get(java.util.Calendar.YEAR));
+                caldroidFragment.setArguments(args);
+                fragment = caldroidFragment;
+                break;
 
-        } else if (id == R.id.nav_slideshow) {
+            case R.id.nav_disponivel:
+            case R.id.nav_indisponivel:
+                break;
 
-        } else if (id == R.id.nav_disponivel) {
+        }
+       // if (id == R.id.nav_disponivel) {
             // TODO Acessar URL correspondente e indicar que o professor está na sala e disponível!
-        } else if (id == R.id.nav_indisponivel) {
+        //} else if (id == ) {
             // TODO Acessar URL correspondente e indicar que o professor não está na sala ou está indisponível!
+        //}
+
+        if (fragment != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.cal, fragment);
+            ft.commit();
+        }
+
+        // set the toolbar title
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(title);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+       /* DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        int id = item.getItemId();
+        Snackbar.make(getCurrentFocus(), "Ué pq não vem aqui!!!", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+
+        if (id == R.id.nav_home) {
+            // Handle the camera action
+            //fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            //fragmentTransaction.remove(caldroidFragment);
+        } else if (id == R.id.nav_calendario) {
+            Snackbar.make(drawer, "Ué...", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            caldroidFragment = new CaldroidFragment();
+            Bundle args = new Bundle();
+            java.util.Calendar cal = java.util.Calendar.getInstance();
+            args.putInt(CaldroidFragment.MONTH, cal.get(java.util.Calendar.MONTH) + 1);
+            args.putInt(CaldroidFragment.YEAR, cal.get(java.util.Calendar.YEAR));
+            caldroidFragment.setArguments(args);
+
+            fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.cal, caldroidFragment);
+            fragmentTransaction.commit();
+
+        } else
+
+
+        drawer.closeDrawer(GravityCompat.START);*/
+        displayView(item.getItemId());
         return true;
     }
 

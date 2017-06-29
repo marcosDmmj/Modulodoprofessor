@@ -4,12 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.denis.mdulodoprofessor.Main2Activity">
-
-    <FrameLayout
-        android:id="@+id/cal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
+    tools:context="com.denis.mdulodoprofessor.Telas.Main2Activity">
 
 </android.support.constraint.ConstraintLayout>
