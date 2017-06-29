@@ -19,6 +19,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -28,6 +29,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.denis.mdulodoprofessor.R;
@@ -35,6 +37,7 @@ import com.denis.mdulodoprofessor.Telas.Fragment.EventFragment;
 import com.denis.mdulodoprofessor.Telas.Fragment.Frag_calendar;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.Scopes;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
@@ -45,6 +48,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.calendar.CalendarScopes;
+import com.google.api.services.calendar.model.AclRule;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
 import com.roomorama.caldroid.CaldroidFragment;
@@ -73,7 +77,7 @@ public class MainActivity extends AppCompatActivity
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
 
     private static final String PREF_ACCOUNT_NAME = "accountName";
-    private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
+    private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY, Scopes.PROFILE};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,26 +96,10 @@ public class MainActivity extends AppCompatActivity
 
               //  startActivity(intent);
                 // TODO Agendar horários para ele
-                Snackbar.make(fab, "Ué...", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                caldroidFragment = new CaldroidFragment();
-                Bundle args = new Bundle();
-                java.util.Calendar cal = java.util.Calendar.getInstance();
-                args.putInt(CaldroidFragment.MONTH, cal.get(java.util.Calendar.MONTH) + 1);
-                args.putInt(CaldroidFragment.YEAR, cal.get(java.util.Calendar.YEAR));
-                //args.putInt(CaldroidFragment.THEME_RESOURCE, com.caldroid.R.style.CaldroidDefaultDark);
-                ColorDrawable green = new ColorDrawable(Color.GREEN);
-                caldroidFragment.setBackgroundDrawableForDate(green, new Date());
-                caldroidFragment.setTextColorForDate(R.color.colorPrimary,new Date());
-                caldroidFragment.setArguments(args);
-
-                fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.cal, caldroidFragment);
-                fragmentTransaction.commit();
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         //noinspection deprecation
@@ -121,6 +109,15 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        final View headerView = navigationView.getHeaderView(0);
+        headerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MainActivity.this, "clicked", Toast.LENGTH_SHORT).show();
+                drawer.closeDrawer(GravityCompat.START);
+                Log.e("Click! ","Clicou nessa praga?");
+            }
+        });
 
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("Calling Google Calendar API ...");
@@ -129,6 +126,50 @@ public class MainActivity extends AppCompatActivity
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
+
+        TextView nome  = (TextView) headerView.findViewById(R.id.nameTextView);
+
+        String accountName = getPreferences(Context.MODE_PRIVATE)
+                .getString(PREF_ACCOUNT_NAME, null);
+        if (accountName != null) {
+            nome.setText("Bem vindo, "+accountName);
+        } else {
+            nome.setText("Usuário não logado!");
+        }
+        nome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               /* Log.e("Click! ","Clicou nessa praga?");
+                if (! isGooglePlayServicesAvailable()) {
+                    acquireGooglePlayServices();
+                } else if (mCredential.getSelectedAccountName() == null) {
+                    chooseAccount();
+                } else if (! isDeviceOnline()) {
+                    //mOutputText.setText("No network connection available.");
+                    Snackbar.make(view, "No network connection available.", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+
+                } else {
+                    Snackbar.make(view, "Já logado!", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+                headerView.refreshDrawableState();*/
+            }
+        });
+
+        caldroidFragment = new CaldroidFragment();
+        Bundle args = new Bundle();
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        args.putInt(CaldroidFragment.MONTH, cal.get(java.util.Calendar.MONTH) + 1);
+        args.putInt(CaldroidFragment.YEAR, cal.get(java.util.Calendar.YEAR));
+        ColorDrawable blue = new ColorDrawable(Color.BLUE);
+        caldroidFragment.setBackgroundDrawableForDate(blue, new Date());
+        caldroidFragment.setTextColorForDate(R.color.colorPrimary,new Date());
+        caldroidFragment.setArguments(args);
+
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.cal, caldroidFragment);
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -157,7 +198,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            //getResultsFromApi();
+            getResultsFromApi();
             Snackbar.make(getCurrentFocus(), "Ué...", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
             // TODO Ele pode configurar a conta google logada
@@ -267,9 +308,12 @@ public class MainActivity extends AppCompatActivity
             //mOutputText.setText("No network connection available.");
             Snackbar.make(getCurrentFocus(), "No network connection available.", Snackbar.LENGTH_LONG)
                   .setAction("Action", null).show();
-
+            Log.e("Internet! ","No network connection available.");
         } else {
-            new MainActivity.MakeRequestTask(mCredential).execute();
+            Snackbar.make(getCurrentFocus(), "Já logado!", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            Log.e("Logado! ","Já logado.");
+            //new MainActivity.MakeRequestTask(mCredential).execute();
         }
     }
 
