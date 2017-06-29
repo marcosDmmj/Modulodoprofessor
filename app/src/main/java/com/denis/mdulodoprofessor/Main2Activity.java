@@ -1,5 +1,6 @@
 package com.denis.mdulodoprofessor;
 
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -19,6 +20,8 @@ import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.client.util.DateTime;
 
 import com.google.api.services.calendar.model.*;
+import com.google.api.services.calendar.model.Calendar;
+import com.roomorama.caldroid.CaldroidFragment;
 
 import android.Manifest;
 import android.accounts.AccountManager;
@@ -40,14 +43,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class Main2Activity extends AppCompatActivity
+import static java.util.Calendar.getInstance;
+
+public class Main2Activity extends FragmentActivity
         implements EasyPermissions.PermissionCallbacks {
     GoogleAccountCredential mCredential;
     private TextView mOutputText;
@@ -113,6 +116,17 @@ public class Main2Activity extends AppCompatActivity
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
+
+        CaldroidFragment caldroidFragment = new CaldroidFragment();
+        Bundle args = new Bundle();
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        args.putInt(CaldroidFragment.MONTH, cal.get(java.util.Calendar.MONTH) + 1);
+        args.putInt(CaldroidFragment.YEAR, cal.get(java.util.Calendar.YEAR));
+        caldroidFragment.setArguments(args);
+
+        android.support.v4.app.FragmentTransaction t = getSupportFragmentManager().beginTransaction();
+        t.replace(R.id.cal, caldroidFragment);
+        t.commit();
     }
 
 
