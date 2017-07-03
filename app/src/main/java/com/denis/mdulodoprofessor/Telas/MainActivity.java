@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-        displayView(R.id.nav_home);
+       // displayView(R.id.nav_home);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-            int id = item.getItemId();
+        int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
@@ -206,7 +206,14 @@ public class MainActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
-}
+    }
+
+    public void fazHome(MenuItem item){
+        Snackbar.make(getCurrentFocus(), "Apertou no home!", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+        Log.e("Erro","É mentira, mas o importante é se veio aqui... ");
+    }
+
     public void displayView(int viewId) {
         Fragment fragment = null;
         String title = getString(R.string.app_name);
@@ -256,12 +263,14 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
 
     }
-    @SuppressWarnings("StatementWithEmptyBody")
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
 
+        String title;
         int id = item.getItemId();
+        title = "" + id;
         Log.e("id drawer",""+id);
         Snackbar.make(getCurrentFocus(), "id drawer:"+id, Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
@@ -272,24 +281,13 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_calendario) {
             Snackbar.make(getCurrentFocus(), "chibata", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
-            /*Snackbar.make(drawer, "Ué...", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-            caldroidFragment = new CaldroidFragment();
-            Bundle args = new Bundle();
-            java.util.Calendar cal = java.util.Calendar.getInstance();
-            args.putInt(CaldroidFragment.MONTH, cal.get(java.util.Calendar.MONTH) + 1);
-            args.putInt(CaldroidFragment.YEAR, cal.get(java.util.Calendar.YEAR));
-            caldroidFragment.setArguments(args);
-
-            fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.cal, caldroidFragment);
-            fragmentTransaction.commit();
-    */
         }
 
-        //DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(title);
+        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        //displayView(item.getItemId());
         return true;
     }
 
