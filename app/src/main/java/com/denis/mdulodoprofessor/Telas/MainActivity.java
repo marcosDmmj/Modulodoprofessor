@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY, Scopes.PROFILE};
+    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,10 +100,9 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        //noinspection deprecation
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         displayView(R.id.nav_home);
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity
         nome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               /* Log.e("Click! ","Clicou nessa praga?");
+                Log.e("Click! ","Clicou nessa praga?");
                 if (! isGooglePlayServicesAvailable()) {
                     acquireGooglePlayServices();
                 } else if (mCredential.getSelectedAccountName() == null) {
@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity
                     Snackbar.make(view, "Já logado!", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }
-                headerView.refreshDrawableState();*/
+                headerView.refreshDrawableState();
             }
         });
 
@@ -256,21 +256,23 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
 
     }
-
+    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-       /* DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         int id = item.getItemId();
-        Snackbar.make(getCurrentFocus(), "Ué pq não vem aqui!!!", Snackbar.LENGTH_LONG)
+        Log.e("id drawer",""+id);
+        Snackbar.make(getCurrentFocus(), "id drawer:"+id, Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
 
         if (id == R.id.nav_home) {
-            // Handle the camera action
-            //fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            //fragmentTransaction.remove(caldroidFragment);
+            Snackbar.make(getCurrentFocus(), "arroy:", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
         } else if (id == R.id.nav_calendario) {
-            Snackbar.make(drawer, "Ué...", Snackbar.LENGTH_LONG)
+            Snackbar.make(getCurrentFocus(), "chibata", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            /*Snackbar.make(drawer, "Ué...", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
             caldroidFragment = new CaldroidFragment();
             Bundle args = new Bundle();
@@ -282,12 +284,12 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.cal, caldroidFragment);
             fragmentTransaction.commit();
+    */
+        }
 
-        } else
-
-
-        drawer.closeDrawer(GravityCompat.START);*/
-        displayView(item.getItemId());
+        //DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        //displayView(item.getItemId());
         return true;
     }
 
